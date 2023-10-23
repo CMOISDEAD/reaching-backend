@@ -1,21 +1,16 @@
 import express from "express";
-import { createServer } from "http";
-import { Server } from "socket.io";
+import apiRouter from "./routes/api";
+import authRouter from "./routes/auth";
+import { socket } from "./lib/socket";
 
 const app = express();
 
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
+const { server, io } = socket(app);
 
 app.set("port", process.env.PORT || 3000);
 
-app.get("/", (_, res) => {
-  res.send("Hello World");
-});
+app.use("/auth", authRouter);
+app.use("/api", apiRouter);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
