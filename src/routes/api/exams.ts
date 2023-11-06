@@ -5,7 +5,12 @@ const prisma = new PrismaClient();
 
 export const allExams = async (req: Request, res: Response) => {
   try {
-    const exams = await prisma.exam.findMany();
+    const exams = await prisma.exam.findMany({
+      include: {
+        course: true,
+        teacher: true,
+      },
+    });
     res.status(200).json(exams);
   } catch (error) {
     res.status(500).json({ error: "Error fetching exams" });
@@ -19,7 +24,10 @@ export const getExam = async (req: Request, res: Response) => {
       where: {
         id: Number(id),
       },
-      include: {},
+      include: {
+        course: true,
+        teacher: true,
+      },
     });
     res.status(200).json(exam);
   } catch (error) {
@@ -30,14 +38,28 @@ export const getExam = async (req: Request, res: Response) => {
 export const createExam = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    const course = parseInt(data.courseId);
+    const teacher = parseInt(data.teacherId);
+    delete data.courseId;
+    delete data.teacherId;
     const exam = await prisma.exam.create({
       data: {
         ...data,
-        content: JSON.stringify(data.content),
+        course: {
+          connect: {
+            id: course,
+          },
+        },
+        teacher: {
+          connect: {
+            id: teacher,
+          },
+        },
       },
     });
     res.status(200).json(exam);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error creating exam" });
   }
 };

@@ -8,6 +8,7 @@ export const allCourses = async (req: Request, res: Response) => {
     const courses = await prisma.course.findMany();
     res.status(200).json(courses);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error fetching courses" });
   }
 };
@@ -30,11 +31,13 @@ export const getCourse = async (req: Request, res: Response) => {
 export const createCourse = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    console.log(data);
     const course = await prisma.course.create({
       data,
     });
     res.status(200).json(course);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error creating course" });
   }
 };
@@ -50,6 +53,7 @@ export const updateCourse = async (req: Request, res: Response) => {
     });
     res.status(200).json(course);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error updating course" });
   }
 };
@@ -64,6 +68,7 @@ export const deleteCourse = async (req: Request, res: Response) => {
     });
     res.status(200);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error deleting course" });
   }
 };

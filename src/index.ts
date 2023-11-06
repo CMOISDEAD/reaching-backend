@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import apiRouter from "./routes/api";
 import authRouter from "./routes/auth";
@@ -6,6 +7,9 @@ import { socket } from "./lib/socket";
 const app = express();
 
 const { server, io } = socket(app);
+
+app.use(cors());
+app.use(express.json());
 
 app.set("port", process.env.PORT || 3000);
 

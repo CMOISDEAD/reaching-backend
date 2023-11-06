@@ -27,7 +27,9 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  const { data, type } = req.body;
+  const data = req.body;
+  const { type } = data;
+  delete data.type;
   try {
     data.password = await encrypt(data.password);
     const user =

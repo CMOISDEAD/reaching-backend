@@ -30,7 +30,7 @@ model Teacher {
   username  String   @unique
   email     String   @unique
   password  String
-  Exams     Exam[]
+  exams     Exam[]
   courses   Course[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -40,9 +40,9 @@ model Course {
   id        Int       @id @default(autoincrement())
   name      String
   students  Student[]
-  Teacher   Teacher   @relation(fields: [teacherId], references: [id])
-  Exams     Exam[]
+  teacher   Teacher   @relation(fields: [teacherId], references: [id])
   teacherId Int
+  exams     Exam[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -50,6 +50,7 @@ model Course {
 model Exam {
   id        Int      @id @default(autoincrement())
   name      String
+  code      Int
   course    Course   @relation(fields: [courseId], references: [id])
   courseId  Int
   active    Boolean  @default(true)
