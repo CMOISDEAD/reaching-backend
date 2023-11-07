@@ -14,11 +14,22 @@ export const login = async (req: Request, res: Response) => {
   try {
     const data =
       type === "student"
-        ? await prisma.student.findUnique(filter)
+        ? await prisma.student.findFirst({
+            where: {
+              email,
+            },
+            include: {
+              course: {
+                include: {
+                  exams: true,
+                },
+              },
+            },
+          })
         : await prisma.teacher.findUnique(filter);
     if (!data) throw new Error("User not found");
     if (!(await compare(password, data.password)))
-      throw new Error("Invalid password");
+      return res.status(400).json({ error: "Invalid password" });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

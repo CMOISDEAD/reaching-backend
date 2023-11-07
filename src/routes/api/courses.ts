@@ -5,7 +5,17 @@ const prisma = new PrismaClient();
 
 export const allCourses = async (req: Request, res: Response) => {
   try {
-    const courses = await prisma.course.findMany();
+    const courses = await prisma.course.findMany({
+      include: {
+        students: true,
+        teacher: true,
+        exams: {
+          include: {
+            studentsGrades: true,
+          },
+        },
+      },
+    });
     res.status(200).json(courses);
   } catch (error) {
     console.error(error);
